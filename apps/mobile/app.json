@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "TukarBuku",
+    "slug": "tukar-buku",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "tastingspace",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#FDFBF7"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FDFBF7"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
