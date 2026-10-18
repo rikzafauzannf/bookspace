@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
+    container_name: bookspace-db
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
@@ -12,29 +11,44 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-tukar_pinjam}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
+    container_name: bookspace-cache
     restart: always
     ports:
       - '6379:6379'
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  minio:
-    image: minio/minio
+  storage:
+    image: bitnami/minio:latest
+    container_name: bookspace-storage
     restart: always
     environment:
       MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin}
+      MINIO_DEFAULT_BUCKETS: "books,avatars,handover"
     ports:
       - '9000:9000'
       - '9001:9001'
     volumes:
-      - minio_data:/data
-    command: server /data --console-address ":9001"
+      - minio_data:/bitnami/minio/data
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
   minio_data:
+    driver: local
