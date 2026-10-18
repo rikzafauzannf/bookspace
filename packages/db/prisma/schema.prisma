@@ -1,0 +1,370 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookStatus {
+  COLLECTION
+  OPEN_TRADE
+  AVAILABLE_FOR_RENT
+  RENTED
+  TRADED
+}
+
+enum TransactionType {
+  BORROW
+  TRADE
+}
+
+enum TransactionStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  CANCELLED
+  HANDED_OVER
+  OVERDUE
+  RETURNED
+  DISPUTED
+  COMPLETED
+}
+
+model User {
+  id               String          @id @default(uuid())
+  email            String          @unique
+  passwordHash     String?
+  fullName         String
+  bio              String?
+  cityId           String?
+  districtId       String?
+  latitude         Float?
+  longitude        Float?
+  trustScore       Int             @default(50)
+  isVerified       Boolean         @default(false)
+  role             Role            @default(USER)
+  isActive         Boolean         @default(true) // For blocking
+  phoneNumber      String?
+  avatarUrl        String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  refreshTokens    RefreshToken[]
+  authTokens       AuthToken[]
+  oauthAccounts    OAuthAccount[]
+  books            Book[]
+  initiatedTransactions Transaction[] @relation("Initiator")
+  ownedTransactions     Transaction[] @relation("Owner")
+  sentMessages     ChatMessage[]
+  reviewsGiven     Review[]        @relation("Reviewer")
+  reviewsReceived  Review[]        @relation("TargetUser")
+
+  posts            Post[]
+  postLikes        PostLike[]
+  postComments     PostComment[]
+  following        Follow[]        @relation("Following")
+  followers        Follow[]        @relation("Followers")
+  wishlists        Wishlist[]
+  notifications    Notification[]
+  reportsCreated   Report[]        @relation("Reporter")
+  reportsAgainst   Report[]        @relation("Target")
+  adminActions     AdminAuditLog[]
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isRevoked Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+model AuthToken {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  type      TokenType
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId, type])
+}
+
+model OAuthAccount {
+  id             String   @id @default(uuid())
+  provider       String
+  providerUserId String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  @@unique([provider, providerUserId])
+}
+
+model Book {
+  id              String        @id @default(uuid())
+  ownerId         String
+  owner           User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isbn            String?
+  title           String
+  author          String
+  publisher       String?
+  publishedYear   Int?
+  description     String?
+  condition       Int           // 1 to 5
+  language        String        @default("id")
+  genre           String[]
+  images          String[]
+  status          BookStatus    @default(COLLECTION)
+
+  allowRent       Boolean       @default(false)
+  rentDurations   Int[]
+  depositAmount   Float         @default(0)
+  shippingPayer   String        @default("borrower")
+  conditionRules  String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  transactions    Transaction[]
+  posts           Post[]
+  reports         Report[]
+
+  @@index([ownerId])
+  @@index([isbn])
+  @@index([status])
+  @@index([title])
+  @@index([author])
+}
+
+model Transaction {
+  id               String            @id @default(uuid())
+  type             TransactionType
+  status           TransactionStatus @default(REQUESTED)
+
+  bookId           String
+  book             Book              @relation(fields: [bookId], references: [id])
+
+  initiatorId      String
+  initiator        User              @relation("Initiator", fields: [initiatorId], references: [id])
+
+  ownerId          String
+  owner            User              @relation("Owner", fields: [ownerId], references: [id])
+
+  offeredBookId    String?
+  durationDays     Int?
+  depositAmount    Float             @default(0)
+
+  handoverNotes    String?
+  handoverImages   String[]
+  returnNotes      String?
+  returnImages     String[]
+
+  dueDate          DateTime?
+  handedOverAt     DateTime?
+  returnedAt       DateTime?
+  completedAt      DateTime?
+
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  history          TransactionHistory[]
+  messages         ChatMessage[]
+  reviews          Review[]
+  disputes         Dispute[]
+
+  @@index([bookId])
+  @@index([initiatorId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+model TransactionHistory {
+  id               String            @id @default(uuid())
+  transactionId    String
+  transaction      Transaction       @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  fromStatus       TransactionStatus
+  toStatus         TransactionStatus
+  actorId          String
+  notes            String?
+  createdAt        DateTime          @default(now())
+
+  @@index([transactionId])
+}
+
+model ChatMessage {
+  id            String      @id @default(uuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  senderId      String
+  sender        User        @relation(fields: [senderId], references: [id])
+  content       String
+  createdAt     DateTime    @default(now())
+
+  @@index([transactionId])
+}
+
+model Review {
+  id            String      @id @default(uuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  reviewerId    String
+  reviewer      User        @relation("Reviewer", fields: [reviewerId], references: [id])
+  targetUserId  String
+  targetUser    User        @relation("TargetUser", fields: [targetUserId], references: [id])
+  rating        Int
+  comment       String?
+  createdAt     DateTime    @default(now())
+
+  @@unique([transactionId, reviewerId])
+  @@index([targetUserId])
+}
+
+model Post {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId      String?
+  book        Book?         @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  content     String
+  rating      Int?
+  images      String[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  likes       PostLike[]
+  comments    PostComment[]
+  reports     Report[]
+
+  @@index([userId])
+  @@index([bookId])
+}
+
+model PostLike {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model PostComment {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  followerId  String
+  follower    User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Wishlist {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  author      String?
+  isbn        String?
+  genre       String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([isbn])
+  @@index([title])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead])
+}
+
+enum ReportTargetType {
+  USER
+  BOOK
+  POST
+  TRANSACTION
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+}
+
+model Report {
+  id            String           @id @default(uuid())
+  reporterId    String
+  reporter      User             @relation("Reporter", fields: [reporterId], references: [id])
+  targetType    ReportTargetType
+  targetId      String
+  book          Book?            @relation(fields: [targetId], references: [id])
+  user          User?            @relation("Target", fields: [targetId], references: [id])
+  post          Post?            @relation(fields: [targetId], references: [id])
+  reason        String
+  status        ReportStatus     @default(PENDING)
+  createdAt     DateTime         @default(now())
+}
+
+model Dispute {
+  id            String      @id @default(uuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  description   String
+  evidence      String[]
+  status        String      @default("PENDING") // PENDING, RESOLVED, CLOSED
+  createdAt     DateTime    @default(now())
+}
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id])
+  action    String
+  targetId  String
+  details   Json
+  createdAt DateTime @default(now())
+}

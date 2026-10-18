@@ -1,0 +1,23 @@
+{
+  "name": "tukar-pinjam-monorepo",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo test",
+    "db:push": "pnpm -F @app/db push",
+    "db:generate": "pnpm -F @app/db generate",
+    "db:seed": "pnpm -F @app/db seed"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
