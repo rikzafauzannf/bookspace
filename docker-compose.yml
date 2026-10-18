@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: bookspace-db
+    container_name: tukar-pinjam-db
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
@@ -19,7 +19,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: bookspace-cache
+    container_name: tukar-pinjam-cache
     restart: always
     ports:
       - '6379:6379'
@@ -32,18 +32,62 @@ services:
       retries: 5
 
   storage:
-    image: bitnami/minio:latest
-    container_name: bookspace-storage
+    image: minio/minio:latest
+    container_name: tukar-pinjam-storage
     restart: always
     environment:
       MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin}
-      MINIO_DEFAULT_BUCKETS: "books,avatars,handover"
     ports:
       - '9000:9000'
       - '9001:9001'
+    command: server /data --console-address ":9001"
     volumes:
-      - minio_data:/bitnami/minio/data
+      - minio_data:/data
+
+  websocket:
+    build:
+      context: ./mini-services/websocket-service
+      dockerfile: Dockerfile
+    container_name: tukar-pinjam-websocket
+    restart: always
+    ports:
+      - '3003:3003'
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    container_name: tukar-pinjam-api
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-tukar_pinjam}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PORT: 3001
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    container_name: tukar-pinjam-web
+    restart: always
+    environment:
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://api:3001
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
