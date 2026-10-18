@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe 5 Alur Inti - TukarBuku</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              wood: '#5C4033',
+              woodHover: '#4A3328',
+              terra: '#C85A32',
+              paper: '#FDFBF7',
+              paperDark: '#F4EBE1',
+              charcoal: '#2C221E',
+              muted: '#7A685D',
+              border: '#E6D5C3',
+              success: '#2E7D32',
+              warning: '#ED6C02',
+              error: '#C62828'
+            }
+          },
+          fontFamily: {
+            serif: ['Merriweather', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8F6F0; color: #2C221E; }
+    h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <!-- Header Nav Tab -->
+  <header class="max-w-6xl mx-auto mb-8 bg-white p-6 rounded-2xl shadow-sm border border-brand-border">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <span class="text-xs uppercase tracking-wider font-semibold text-brand-terra">Interactive Prototype Wireframe</span>
+        <h1 class="text-2xl md:text-3xl font-bold text-brand-wood">TukarBuku: 5 Alur Inti Platform</h1>
+        <p class="text-sm text-brand-muted mt-1">Eksplorasi wireframe antarmuka pengguna berbasis Tailwind CSS & Design Tokens "The Warm Library".</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <button onclick="switchTab('screen-1')" class="tab-btn px-3 py-2 rounded-lg font-medium border border-brand-wood bg-brand-wood text-white" id="btn-1">1. Onboarding (3 Buku)</button>
+        <button onclick="switchTab('screen-2')" class="tab-btn px-3 py-2 rounded-lg font-medium border border-brand-border bg-white text-brand-wood hover:bg-brand-paper" id="btn-2">2. Detail & Pinjam</button>
+        <button onclick="switchTab('screen-3')" class="tab-btn px-3 py-2 rounded-lg font-medium border border-brand-border bg-white text-brand-wood hover:bg-brand-paper" id="btn-3">3. Kotak Masuk Request</button>
+        <button onclick="switchTab('screen-4')" class="tab-btn px-3 py-2 rounded-lg font-medium border border-brand-border bg-white text-brand-wood hover:bg-brand-paper" id="btn-4">4. Transaksi & Chat</button>
+        <button onclick="switchTab('screen-5')" class="tab-btn px-3 py-2 rounded-lg font-medium border border-brand-border bg-white text-brand-wood hover:bg-brand-paper" id="btn-5">5. Profil & Trust Score</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto">
+
+    <!-- ==================== SCREEN 1: ONBOARDING + 3 BUKU ==================== -->
+    <section id="screen-1" class="screen-content block space-y-6">
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <div class="flex items-start">
+          <div class="flex-1">
+            <h3 class="font-bold text-amber-900 text-sm">Tujuan Pengguna & Titik Drop-Off</h3>
+            <p class="text-xs text-amber-800 mt-1"><strong>Tujuan:</strong> Mengisi rak awal dengan 3 buku agar akun aktif dan layak meminjam.<br><strong>Aksi Utama:</strong> Scan ISBN via kamera / input manual buku.<br><strong>Titik Rawan Berhenti (Drop-off):</strong> Pengguna malas mengetik judul/detail buku secara manual.<br><strong>Solusi UX:</strong> Fitur Scan Barcode kamera instan + pencarian cepat Google Books/OpenLibrary (1-klik tambah).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-3xl border border-brand-border shadow-md overflow-hidden">
+        <!-- Phone Shell Header -->
+        <div class="bg-brand-paper px-6 py-4 border-b border-brand-border flex items-center justify-between">
+          <span class="text-sm font-bold text-brand-wood">Langkah Awal Pembaca</span>
+          <span class="text-xs bg-brand-wood text-white px-2 py-0.5 rounded-full font-semibold">2 dari 3 Buku</span>
+        </div>
+
+        <div class="p-6 space-y-6">
+          <div>
+            <h2 class="text-xl font-bold text-brand-wood">Yuk, isi rak bukumu!</h2>
+            <p class="text-xs text-brand-muted mt-1">Unggah minimal 3 buku untuk membuka akses peminjaman komunitas.</p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div>
+            <div class="w-full bg-brand-paperDark h-2.5 rounded-full overflow-hidden">
+              <div class="bg-brand-terra h-2.5 rounded-full" style="width: 66%;"></div>
+            </div>
+            <span class="text-[11px] text-brand-muted mt-1 inline-block">Tersisa 1 buku lagi untuk mulai meminjam</span>
+          </div>
+
+          <!-- Scanner Action Card -->
+          <div class="border-2 border-dashed border-brand-border rounded-2xl p-6 text-center bg-brand-paper/50 hover:bg-brand-paper transition cursor-pointer">
+            <div class="w-12 h-12 bg-brand-wood/10 text-brand-wood rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+            </div>
+            <h4 class="font-bold text-sm text-brand-wood">Scan Barcode / ISBN Buku</h4>
+            <p class="text-xs text-brand-muted mt-1">Arahkan kamera ke barcode sampul belakang</p>
+            <button class="mt-4 w-full py-2.5 px-4 bg-brand-wood hover:bg-brand-woodHover text-white rounded-xl text-xs font-semibold transition">Buka Kamera Pemindai</button>
+          </div>
+
+          <!-- Recently Added Books -->
+          <div class="space-y-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-muted">Buku yang Sudah Ditambahkan</span>
+            <div class="flex items-center gap-3 p-3 bg-brand-paper rounded-xl border border-brand-border/60">
+              <div class="w-12 h-16 bg-brand-wood/20 rounded flex items-center justify-center text-[10px] text-brand-muted font-serif">Cover</div>
+              <div class="flex-1 min-w-0">
+                <h5 class="text-xs font-bold text-brand-charcoal truncate">Laskar Pelangi</h5>
+                <p class="text-[11px] text-brand-muted">Andrea Hirata</p>
+                <span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium">Bisa Dipinjam</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-brand-paper rounded-xl border border-brand-border/60">
+              <div class="w-12 h-16 bg-brand-wood/20 rounded flex items-center justify-center text-[10px] text-brand-muted font-serif">Cover</div>
+              <div class="flex-1 min-w-0">
+                <h5 class="text-xs font-bold text-brand-charcoal truncate">Bumi Manusia</h5>
+                <p class="text-[11px] text-brand-muted">Pramoedya Ananta Toer</p>
+                <span class="inline-block mt-1 text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">Open Trade</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 2: DETAIL BUKU & AJUKAN PINJAM ==================== -->
+    <section id="screen-2" class="screen-content hidden space-y-6">
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <h3 class="font-bold text-amber-900 text-sm">Tujuan Pengguna & Titik Drop-Off</h3>
+        <p class="text-xs text-amber-800 mt-1"><strong>Tujuan:</strong> Mengetahui kondisi riil buku, lokasi penjemputan, dan mengajukan pinjam.<br><strong>Aksi Utama:</strong> Menekan tombol "Ajukan Pinjam Sekarang" dengan durasi yang dipilih.<br><strong>Titik Rawan Berhenti:</strong> Ketakutan terhadap biaya deposit yang tidak transparan / syarat rumit.<br><strong>Solusi UX:</strong> Breakdown syarat pinjam yang ringkas (durasi hari, lokasi kecamatan, nominal jaminan yang jelas).</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-3xl border border-brand-border shadow-md overflow-hidden">
+        <div class="relative bg-brand-paperDark p-8 flex items-center justify-center">
+          <div class="w-32 h-48 bg-brand-wood shadow-xl rounded-md flex items-center justify-center text-white font-serif text-sm p-4 text-center">
+            Filosofi Teras
+          </div>
+          <span class="absolute top-4 right-4 text-xs bg-emerald-700 text-white font-semibold px-2.5 py-1 rounded-full shadow-sm">Bisa Dipinjam</span>
+        </div>
+
+        <div class="p-6 space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-brand-wood">Filosofi Teras</h2>
+            <p class="text-xs text-brand-muted mt-0.5">Henry Manampiring • Kompas Buku</p>
+            <div class="flex items-center gap-1.5 mt-2">
+              <span class="text-amber-500 text-xs">★★★★★</span>
+              <span class="text-[11px] text-brand-muted font-medium">Kondisi 4/5 (Mulus, sedikit lipatan)</span>
+            </div>
+          </div>
+
+          <!-- Pemilik Info Bar -->
+          <div class="p-3 bg-brand-paper rounded-xl border border-brand-border flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-brand-wood text-white font-bold text-xs flex items-center justify-center">DS</div>
+              <div>
+                <h5 class="text-xs font-bold text-brand-wood">Dimas Surya</h5>
+                <p class="text-[10px] text-brand-muted">Kec. Senen, Jakarta Pusat (± 2.4 km)</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Skor 98%</span>
+            </div>
+          </div>
+
+          <!-- Syarat Peminjaman Card -->
+          <div class="space-y-2.5 text-xs border-t border-brand-border pt-4">
+            <h4 class="font-bold text-brand-wood text-xs">Syarat dari Pemilik:</h4>
+            <div class="flex justify-between text-brand-muted">
+              <span>Pilihan Durasi:</span>
+              <span class="font-semibold text-brand-charcoal">7 / 14 / 30 Hari</span>
+            </div>
+            <div class="flex justify-between text-brand-muted">
+              <span>Deposit Jaminan:</span>
+              <span class="font-semibold text-brand-charcoal">Rp 30.000 (Dikembalikan penuh)</span>
+            </div>
+            <div class="flex justify-between text-brand-muted">
+              <span>Ongkir / Serah Terima:</span>
+              <span class="font-semibold text-brand-charcoal">Tanggung Jawab Peminjam</span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="pt-2">
+            <button class="w-full py-3.5 bg-brand-terra hover:bg-opacity-95 text-white font-semibold rounded-xl text-sm shadow-sm transition">Ajukan Pinjam Buku</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 3: KOTAK MASUK REQUEST (PEMILIK) ==================== -->
+    <section id="screen-3" class="screen-content hidden space-y-6">
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <h3 class="font-bold text-amber-900 text-sm">Tujuan Pengguna & Titik Drop-Off</h3>
+        <p class="text-xs text-amber-800 mt-1"><strong>Tujuan:</strong> Pemilik buku mengevaluasi pemohon pinjam dan memutuskan menyetujui/menolak.<br><strong>Aksi Utama:</strong> Tombol "Setujui Permintaan" atau "Tolak".<br><strong>Titik Rawan Berhenti:</strong> Ragu karena tidak kenal peminjam dan khawatir buku tidak kembali.<br><strong>Solusi UX:</strong> Menonjolkan Skor Kepercayaan, lencana reputasi, dan riwayat sukses peminjam di kartu request.</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-3xl border border-brand-border shadow-md overflow-hidden">
+        <div class="bg-brand-paper px-6 py-4 border-b border-brand-border flex items-center justify-between">
+          <h2 class="text-base font-bold text-brand-wood">Permintaan Masuk</h2>
+          <span class="text-xs bg-brand-terra text-white px-2 py-0.5 rounded-full font-bold">1 Baru</span>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <!-- Request Card -->
+          <div class="border border-brand-border rounded-2xl p-4 bg-brand-paper/40 space-y-4">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-brand-terra text-white font-bold text-xs flex items-center justify-center flex-shrink-0">RF</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="text-xs font-bold text-brand-wood">Rikza Fauzan</h4>
+                  <span class="text-[10px] text-brand-muted">5 mnt lalu</span>
+                </div>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">Skor 95%</span>
+                  <span class="text-[10px] text-brand-muted">• 12 Transaksi Berhasil</span>
+                </div>
+                <p class="text-xs text-brand-charcoal mt-2.5">"Halo! Saya ingin meminjam buku <strong>Laskar Pelangi</strong> selama 14 hari. Siap ambil langsung di sekitar Senen."</p>
+              </div>
+            </div>
+
+            <!-- Detail Peminjaman Mini Box -->
+            <div class="bg-white p-3 rounded-xl border border-brand-border text-[11px] space-y-1">
+              <div class="flex justify-between"><span class="text-brand-muted">Buku:</span><span class="font-medium">Laskar Pelangi</span></div>
+              <div class="flex justify-between"><span class="text-brand-muted">Durasi:</span><span class="font-medium">14 Hari</span></div>
+              <div class="flex justify-between"><span class="text-brand-muted">Jaminan:</span><span class="font-medium">Rp 25.000</span></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <button class="py-2.5 bg-brand-paperDark text-brand-wood font-semibold rounded-xl text-xs hover:bg-brand-border transition">Tolak</button>
+              <button class="py-2.5 bg-brand-wood text-white font-semibold rounded-xl text-xs hover:bg-brand-woodHover transition">Setujui Permintaan</button>
+            </div>
+          </div>
+
+          <!-- Empty State Demo (Secondary Tab) -->
+          <div class="border border-dashed border-brand-border rounded-2xl p-6 text-center text-brand-muted">
+            <span class="text-2xl">📭</span>
+            <p class="text-xs font-medium mt-2">Tidak ada permintaan tertunda lainnya</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 4: TRANSAKSI AKTIF & CHAT ==================== -->
+    <section id="screen-4" class="screen-content hidden space-y-6">
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <h3 class="font-bold text-amber-900 text-sm">Tujuan Pengguna & Titik Drop-Off</h3>
+        <p class="text-xs text-amber-800 mt-1"><strong>Tujuan:</strong> Koordinasi serah terima buku, unggah bukti foto kondisi fisik, dan melihat hitung mundur jatuh tempo.<br><strong>Aksi Utama:</strong> Unggah Foto Serah Terima & Konfirmasi Terima Buku.<br><strong>Titik Rawan Berhenti:</strong> Bingung status transaksi sudah sampai tahap mana.<br><strong>Solusi UX:</strong> Banner status alur transaksi eksplisit (Disetujui → Serah Terima → Dipinjam → Pengembalian) di atas ruang chat.</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-3xl border border-brand-border shadow-md overflow-hidden flex flex-col h-[620px]">
+        <!-- Transaction Status Ribbon -->
+        <div class="bg-brand-wood text-white p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-amber-200">Status: Disetujui</span>
+            <span class="text-xs font-medium">Batas Jatuh Tempo: 14 Hari</span>
+          </div>
+          <h4 class="text-sm font-bold mt-1">Laskar Pelangi (Peminjam: Rikza F.)</h4>
+          <!-- Step indicator -->
+          <div class="flex items-center gap-1.5 mt-3 text-[10px]">
+            <span class="px-2 py-0.5 bg-white text-brand-wood rounded-full font-bold">1. Disetujui</span>
+            <span>→</span>
+            <span class="px-2 py-0.5 bg-brand-woodHover text-amber-100 rounded-full font-medium">2. Serah Terima</span>
+            <span>→</span>
+            <span class="text-brand-muted">3. Kembali</span>
+          </div>
+        </div>
+
+        <!-- Handover Photo Prompt Warning -->
+        <div class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between text-xs text-amber-900">
+          <span>Wajib foto kondisi fisik saat serah terima</span>
+          <button class="bg-amber-800 text-white text-[10px] font-bold px-2 py-1 rounded">Ambil Foto</button>
+        </div>
+
+        <!-- Chat Stream -->
+        <div class="flex-1 p-4 overflow-y-auto space-y-3 bg-brand-paper/20 text-xs">
+          <div class="text-center my-2"><span class="bg-brand-border/60 text-[10px] text-brand-muted px-2 py-1 rounded-full">Chat dibuka otomatis karena request disetujui</span></div>
+
+          <div class="flex items-start gap-2 max-w-[80%]">
+            <div class="w-6 h-6 rounded-full bg-brand-terra text-white text-[9px] flex items-center justify-center">RF</div>
+            <div class="bg-white p-2.5 rounded-2xl rounded-tl-none border border-brand-border text-brand-charcoal">
+              Halo Mas Dimas, bisa COD di Kopi Kenangan Senen jam 4 sore ini?
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 max-w-[80%] ml-auto flex-row-reverse">
+            <div class="w-6 h-6 rounded-full bg-brand-wood text-white text-[9px] flex items-center justify-center">DS</div>
+            <div class="bg-brand-wood text-white p-2.5 rounded-2xl rounded-tr-none">
+              Bisa banget Mas Rikza! Sampai ketemu di sana ya. Jangan lupa cek kondisi buku bareng nanti.
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Field -->
+        <div class="p-3 border-t border-brand-border bg-white flex items-center gap-2">
+          <button class="w-9 h-9 rounded-full bg-brand-paper border border-brand-border flex items-center justify-center text-brand-muted text-sm">📷</button>
+          <input type="text" placeholder="Ketik pesan koordinasi..." class="flex-1 border border-brand-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-wood">
+          <button class="w-9 h-9 rounded-full bg-brand-wood text-white flex items-center justify-center text-xs font-bold">➤</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 5: PROFIL & TRUST SCORE ==================== -->
+    <section id="screen-5" class="screen-content hidden space-y-6">
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <h3 class="font-bold text-amber-900 text-sm">Tujuan Pengguna & Titik Drop-Off</h3>
+        <p class="text-xs text-amber-800 mt-1"><strong>Tujuan:</strong> Menampilkan reputasi pembaca, pencapaian lencana, dan riwayat ulasan untuk membangun rasa percaya.<br><strong>Aksi Utama:</strong> Melihat breakdown skor reputasi dan mengedit profil.<br><strong>Titik Rawan Berhenti:</strong> Pengguna baru merasa frustrasi karena skor awalnya masih standar.<br><strong>Solusi UX:</strong> Edukasi transparan cara meningkatkan Trust Score (verifikasi nomor WA, kembalikan buku tepat waktu, ulasan bintang 5).</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white rounded-3xl border border-brand-border shadow-md overflow-hidden p-6 space-y-6">
+        <!-- Profile Header -->
+        <div class="text-center space-y-2">
+          <div class="relative inline-block">
+            <div class="w-20 h-20 bg-brand-wood text-white font-bold text-2xl rounded-full flex items-center justify-center mx-auto border-4 border-brand-paper">
+              RF
+            </div>
+            <span class="absolute bottom-0 right-0 bg-emerald-600 text-white text-[10px] p-1 rounded-full border-2 border-white">✓</span>
+          </div>
+          <h2 class="text-lg font-bold text-brand-wood">Rikza Fauzan</h2>
+          <p class="text-xs text-brand-muted">Kec. Senen, Jakarta Pusat • Bergabung Mei 2026</p>
+        </div>
+
+        <!-- Trust Score Card -->
+        <div class="bg-gradient-to-br from-brand-paper to-brand-paperDark p-4 rounded-2xl border border-brand-border text-center">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-brand-muted">Skor Kepercayaan Komunitas</span>
+          <div class="text-4xl font-black text-brand-wood my-1">95<span class="text-lg font-normal text-brand-muted">/100</span></div>
+          <p class="text-[11px] text-emerald-800 font-medium">Pembaca Terpercaya (Peminjam Teladan)</p>
+          <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-brand-border/60 text-[11px]">
+            <div><span class="font-bold block text-brand-charcoal">12</span><span class="text-brand-muted text-[10px]">Selesai</span></div>
+            <div><span class="font-bold block text-brand-charcoal">100%</span><span class="text-brand-muted text-[10px]">Tepat Waktu</span></div>
+            <div><span class="font-bold block text-brand-charcoal">4.9 ★</span><span class="text-brand-muted text-[10px]">Rating</span></div>
+          </div>
+        </div>
+
+        <!-- Badges Earned -->
+        <div class="space-y-2.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-muted">Lencana Prestasi</span>
+          <div class="flex gap-2">
+            <span class="px-3 py-1.5 bg-amber-100 text-amber-900 rounded-xl text-xs font-semibold flex items-center gap-1">🎖️ 5x Tepat Waktu</span>
+            <span class="px-3 py-1.5 bg-blue-100 text-blue-900 rounded-xl text-xs font-semibold flex items-center gap-1">📚 Kolektor 10+</span>
+          </div>
+        </div>
+
+        <!-- Reviews List Mini -->
+        <div class="space-y-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-muted">Ulasan Pembaca Lain</span>
+          <div class="p-3 bg-brand-paper/50 rounded-xl border border-brand-border text-xs space-y-1">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-brand-charcoal">Dimas Surya</span>
+              <span class="text-amber-500 text-[10px]">★★★★★</span>
+            </div>
+            <p class="text-brand-muted text-[11px]">"Buku dikembalikan dalam kondisi sangat terawat dan tepat waktu. Terima kasih banyak!"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function switchTab(screenId) {
+      document.querySelectorAll('.screen-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.screen-content').forEach(el => el.classList.remove('block'));
+
+      const target = document.getElementById(screenId);
+      target.classList.remove('hidden');
+      target.classList.add('block');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-wood', 'text-white');
+        btn.classList.add('bg-white', 'text-brand-wood');
+      });
+
+      const activeBtnId = 'btn-' + screenId.split('-')[1];
+      const activeBtn = document.getElementById(activeBtnId);
+      activeBtn.classList.remove('bg-white', 'text-brand-wood');
+      activeBtn.classList.add('bg-brand-wood', 'text-white');
+    }
+  </script>
+</body>
+</html>

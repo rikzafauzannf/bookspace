@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TukarBuku UX Wireframes v2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #FDFBF7; color: #2C221E; }
+    .screen-container { min-height: 100vh; padding: 2rem; }
+    .wireframe-box { background: white; border: 1px solid #E6D5C3; border-radius: 1.5rem; padding: 1.5rem; max-width: 400px; margin: 0 auto; }
+    .ux-note { background: #FFF9F0; border-left: 4px solid #D97706; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.8rem; }
+    .btn-touch { min-height: 48px; }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-3xl font-bold text-[#5C4033] mb-8">UX Wireframe: 5 Alur Inti TukarBuku</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+
+    <!-- 1. ONBOARDING -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-[#5C4033]">1. Onboarding</h2>
+      <div class="ux-note">
+        <strong>Goal:</strong> Tambah 3 buku.<br><strong>Action:</strong> Scan ISBN.<br><strong>State:</strong> Empty (belum ada buku).<br><strong>Drop-off:</strong> Input manual.<br><strong>Fix:</strong> Scan Kamera & Auto-fill.
+      </div>
+      <div class="wireframe-box border-2 border-dashed border-[#C85A32]">
+        <h3 class="font-bold">Tambah Buku Baru</h3>
+        <button class="btn-touch w-full bg-[#5C4033] text-white rounded-xl mt-4">Scan Barcode</button>
+        <div class="mt-4 text-xs text-gray-500">Tersisa 1/3 buku</div>
+      </div>
+    </div>
+
+    <!-- 2. DETAIL BUKU -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-[#5C4033]">2. Detail Buku</h2>
+      <div class="ux-note">
+        <strong>Goal:</strong> Ajukan pinjam.<br><strong>Action:</strong> Klik "Pinjam".<br><strong>State:</strong> Loading (fetching).<br><strong>Drop-off:</strong> Ragu deposit.<br><strong>Fix:</strong> Tampil Trust Score Pemilik.
+      </div>
+      <div class="wireframe-box">
+        <div class="h-40 bg-gray-200 rounded-lg mb-4"></div>
+        <h3 class="font-bold">Filosofi Teras</h3>
+        <p class="text-xs text-gray-600">Oleh Dimas Surya (Score: 95%)</p>
+        <button class="btn-touch w-full bg-[#C85A32] text-white rounded-xl mt-4">Ajukan Pinjam</button>
+      </div>
+    </div>
+
+    <!-- 3. INBOX -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-[#5C4033]">3. Inbox Request</h2>
+      <div class="ux-note">
+        <strong>Goal:</strong> Setujui request.<br><strong>Action:</strong> Approve/Reject.<br><strong>State:</strong> Empty (tak ada request).<br><strong>Drop-off:</strong> Takut peminjam.<br><strong>Fix:</strong> Tampil Badge Reputasi.
+      </div>
+      <div class="wireframe-box">
+        <div class="flex gap-2 items-center mb-4">
+          <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+          <div><div class="font-bold text-sm">Rikza</div><div class="text-xs">Skor: 95%</div></div>
+        </div>
+        <button class="btn-touch w-full bg-[#5C4033] text-white rounded-xl mb-2">Setujui</button>
+        <button class="btn-touch w-full bg-gray-100 rounded-xl">Tolak</button>
+      </div>
+    </div>
+
+    <!-- 4. AKTIF -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-[#5C4033]">4. Transaksi Aktif</h2>
+      <div class="ux-note">
+        <strong>Goal:</strong> Serah terima.<br><strong>Action:</strong> Foto bukti.<br><strong>State:</strong> Loading (chat).<br><strong>Drop-off:</strong> Bingung status.<br><strong>Fix:</strong> Progress bar.
+      </div>
+      <div class="wireframe-box">
+        <div class="text-xs font-bold mb-2 text-[#C85A32]">Status: Serah Terima</div>
+        <div class="h-64 bg-gray-50 rounded-lg mb-4 p-2 overflow-y-auto text-xs">Chat...</div>
+        <button class="btn-touch w-full bg-[#5C4033] text-white rounded-xl">Unggah Foto Kondisi</button>
+      </div>
+    </div>
+
+    <!-- 5. PROFIL -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-[#5C4033]">5. Profil</h2>
+      <div class="ux-note">
+        <strong>Goal:</strong> Cek reputasi.<br><strong>Action:</strong> Edit profil.<br><strong>State:</strong> Loading data.<br><strong>Drop-off:</strong> Skor rendah.<br><strong>Fix:</strong> Edukasi peningkatan skor.
+      </div>
+      <div class="wireframe-box">
+        <div class="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-4"></div>
+        <h3 class="text-center font-bold">Rikza Fauzan</h3>
+        <div class="text-center text-xl font-black text-[#5C4033]">95/100</div>
+        <p class="text-center text-xs text-green-700">Pembaca Teladan</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
