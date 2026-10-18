@@ -360,9 +360,9 @@ model Report {
   reporter      User             @relation("Reporter", fields: [reporterId], references: [id])
   targetType    ReportTargetType
   targetId      String
-  book          Book?            @relation(fields: [targetId], references: [id])
-  user          User?            @relation("Target", fields: [targetId], references: [id])
-  post          Post?            @relation(fields: [targetId], references: [id])
+  book          Book?            @relation(fields: [targetId], references: [id], map: "Report_targetBook_fkey")
+  user          User?            @relation("Target", fields: [targetId], references: [id], map: "Report_targetUser_fkey")
+  post          Post?            @relation(fields: [targetId], references: [id], map: "Report_targetPost_fkey")
   reason        String
   status        ReportStatus     @default(PENDING)
   createdAt     DateTime         @default(now())
