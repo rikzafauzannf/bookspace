@@ -50,7 +50,7 @@ model User {
   trustScore       Int             @default(50)
   isVerified       Boolean         @default(false)
   role             Role            @default(USER)
-  isActive         Boolean         @default(true) // For blocking
+  isActive         Boolean         @default(true)
   phoneNumber      String?
   avatarUrl        String?
   createdAt        DateTime        @default(now())
@@ -76,6 +76,18 @@ model User {
   reportsCreated   Report[]        @relation("Reporter")
   reportsAgainst   Report[]        @relation("Target")
   adminActions     AdminAuditLog[]
+
+  // Phase 11
+  clubsJoined      ClubMember[]
+  clubsOwned       Club[]
+  readingChallenges ReadingChallenge[]
+  readingLists     ReadingList[]
+  badges           UserBadge[]
+  discussions      Discussion[]
+
+  // Phase 13: Organizations
+  organizationMembers OrganizationMember[]
+  membershipCards     OrganizationMembershipCard[]
 
   @@index([email])
 }
@@ -142,6 +154,12 @@ model Book {
   shippingPayer   String        @default("borrower")
   conditionRules  String?
 
+  // Phase 11 & 13
+  clubOnly        Boolean       @default(false)
+  allowedClubIds  String[]
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -150,6 +168,7 @@ model Book {
   reports         Report[]
 
   @@index([ownerId])
+  @@index([organizationId])
   @@index([isbn])
   @@index([status])
   @@index([title])
@@ -355,7 +374,7 @@ model Dispute {
   transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   description   String
   evidence      String[]
-  status        String      @default("PENDING") // PENDING, RESOLVED, CLOSED
+  status        String      @default("PENDING")
   createdAt     DateTime    @default(now())
 }
 
@@ -367,4 +386,182 @@ model AdminAuditLog {
   targetId  String
   details   Json
   createdAt DateTime @default(now())
+}
+
+// Phase 11: Clubs & Gamification
+enum ClubCategory {
+  INTEREST
+  CITY
+}
+
+model Club {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  category    ClubCategory
+  cityId      String?
+  imageUrl    String?
+  ownerId     String
+  owner       User         @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  members     ClubMember[]
+  booksOfMonth ClubBookOfMonth[]
+  discussions Discussion[]
+
+  @@index([category])
+}
+
+model ClubMember {
+  id       String   @id @default(uuid())
+  clubId   String
+  club     Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isAdmin  Boolean  @default(false)
+  joinedAt DateTime @default(now())
+
+  @@unique([clubId, userId])
+}
+
+model ClubBookOfMonth {
+  id        String   @id @default(uuid())
+  clubId    String
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  bookTitle String
+  author    String
+  isbn      String?
+  month     Int
+  year      Int
+  createdAt DateTime @default(now())
+
+  @@unique([clubId, month, year])
+}
+
+model Discussion {
+  id        String   @id @default(uuid())
+  clubId    String
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  content   String
+  isSpoiler Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clubId])
+}
+
+model ReadingChallenge {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetCount  Int
+  currentCount Int      @default(0)
+  year         Int
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, year])
+}
+
+model ReadingList {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  isPublic    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  items       ReadingListItem[]
+}
+
+model ReadingListItem {
+  id        String      @id @default(uuid())
+  listId    String
+  list      ReadingList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  bookTitle String
+  author    String
+  isbn      String?
+  createdAt DateTime    @default(now())
+}
+
+model Badge {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String
+  imageUrl    String
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+// Phase 13: Organization Accounts
+enum OrgRole {
+  OWNER
+  ADMIN
+  STAFF
+}
+
+enum OrgType {
+  COMMUNITY
+  INDIE_BOOKSTORE
+  LIBRARY
+}
+
+model Organization {
+  id          String               @id @default(uuid())
+  name        String
+  description String?
+  type        OrgType              @default(COMMUNITY)
+  cityId      String?
+  districtId  String?
+  address     String?
+  logoUrl     String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  members     OrganizationMember[]
+  catalog     Book[]
+  cards       OrganizationMembershipCard[]
+
+  @@index([type])
+  @@index([cityId])
+}
+
+model OrganizationMember {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           OrgRole      @default(STAFF)
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, userId])
+}
+
+model OrganizationMembershipCard {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardNumber     String       @unique
+  isActive       Boolean      @default(true)
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, userId])
 }
