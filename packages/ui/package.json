@@ -1,0 +1,11 @@
+{
+  "name": "@app/ui",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/tokens.ts",
+  "types": "./src/tokens.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
